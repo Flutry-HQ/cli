@@ -1,0 +1,12 @@
+src/
+dist/**/*.map
+tests/
+coverage/
+.github/
+.vscode/
+.gitignore
+.npmignore
+tsconfig.json
+*.log
+!assets/
+!assets/logo.png
