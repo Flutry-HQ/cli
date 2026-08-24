@@ -1,6 +1,6 @@
 {
   "name": "@flutry/cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Flurty project scaffolding CLI",
   "bin": {
     "flurty": "dist/index.js"
