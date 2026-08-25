@@ -103,12 +103,12 @@ function buildEnv(answers: Answers, example: boolean): string {
     'PREFIX_API=',
     '# Database',
     `DB=${answers.database ? 'true' : 'false'}`,
+    `DB_HOST=${example ? '' : answers.dbHost}`,
+    `DB_PORT=${example ? '' : answers.dbPort}`,
     `DB_NAME=${example ? '' : answers.dbName}`,
     `DB_USER=${example ? '' : answers.dbUser}`,
     `DB_PASS=${example ? '' : answers.dbPass}`,
-    `DB_HOST=${example ? '' : answers.dbHost}`,
-    `DB_PORT=${example ? '' : answers.dbPort}`,
-    `DB_TYPE=${answers.dbType}`,
+    `DB_DIALECT=${answers.dbType}`,
     '# Secrets',
     `SECRET_KEY=${secret('SECRET_KEY')}`,
     `SECRET_SALT=${secret('SECRET_SALT')}`,
@@ -129,7 +129,7 @@ async function createProject(answers: Answers): Promise<string> {
     if (await exists(targetDir)) throw new Error(`Folder "${answers.folderName}" already exists.`);
 
     spinner.text = chalk.blue('Downloading project template');
-    await degit('https://github.com/Flutry-HQ/Flutry.git', { cache: false, force: true }).clone(targetDir);
+    await degit('https://github.com/Flutry-HQ/flutry.git', { cache: false, force: true }).clone(targetDir);
 
     spinner.text = chalk.magenta('Applying project settings');
     const packageJsonPath = path.join(targetDir, 'package.json');
