@@ -27,7 +27,7 @@ function normalizeName(name: string): NormalizedName {
 
 function routeTemplate(className: string, fileName: string): string {
   return [
-    "import { Router } from '../package/router';",
+    "import { Router } from '../../package/router';",
     '',
     `export default class ${className}Route extends Router {`,
     '  constructor() {',
