@@ -27,7 +27,7 @@ function normalizeName(name: string): NormalizedName {
 
 function routeTemplate(className: string, fileName: string): string {
   return [
-    "import Router from '../../package/router/router';",
+    "import { Router } from '../package/router';",
     '',
     `export default class ${className}Route extends Router {`,
     '  constructor() {',
@@ -98,25 +98,8 @@ async function writeNewFile(filePath: string, content: string): Promise<void> {
   await fs.writeFile(filePath, content, 'utf8');
 }
 
-async function isFlutryProject(projectRoot: string): Promise<boolean> {
-  try {
-    await Promise.all([
-      fs.access(path.join(projectRoot, 'package.json')),
-      fs.access(path.join(projectRoot, 'src', 'package', 'router', 'router.ts')),
-    ]);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function generate(type: GenerateType, name: string): Promise<void> {
   const projectRoot = process.cwd();
-
-  if (!(await isFlutryProject(projectRoot))) {
-    console.error('This command can only be used inside a Flutry project.');
-    return;
-  }
 
   const { fileName, className } = normalizeName(name);
   const sourceRoot = path.join(projectRoot, 'src');
