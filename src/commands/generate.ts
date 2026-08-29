@@ -27,7 +27,7 @@ function normalizeName(name: string): NormalizedName {
 
 function routeTemplate(className: string, fileName: string): string {
   return [
-    "import { Router } from '../../package/router';",
+    "import { Router } from '@flutry/server';",
     '',
     `export default class ${className}Route extends Router {`,
     '  constructor() {',
@@ -48,7 +48,7 @@ function serviceTemplate(className: string): string {
 
 function modelTemplate(className: string, fileName: string): string {
   return [
-    "import { Model, DataTypes, Sequelize } from 'sequelize';",
+    "import { Model, DataTypes, Sequelize } from '@flutry/database-sequlize';",
     '',
     `export type ${className}ModelType = {`,
     '  id: string;',
