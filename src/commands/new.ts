@@ -181,9 +181,6 @@ function buildEnv(answers: Answers, example: boolean): string {
     `DB_PASS=${example ? '' : answers.dbPass}`,
     `DB_DIALECT=${answers.dbType}`,
 
-    '# Socket.IO',
-    `SOCKETIO=${answers.socketio ? 'true' : 'false'}`,
-
     '# Secrets',
     `SECRET_KEY=${secret('SECRET_KEY')}`,
     `SECRET_SALT=${secret('SECRET_SALT')}`,
