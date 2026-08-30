@@ -100,7 +100,7 @@ function buildEnv(answers: Answers, example: boolean): string {
     '# Server',
     `PORT=${DEFAULTS.port}`,
     `HOST=${DEFAULTS.host}`,
-    'PREFIX_API=',
+    'PREFIX_API=/',
     '# Database',
     `DB=${answers.database ? 'true' : 'false'}`,
     `DB_HOST=${example ? '' : answers.dbHost}`,
