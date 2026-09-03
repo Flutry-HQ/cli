@@ -13,12 +13,12 @@ type NormalizedName = {
 function normalizeName(name: string): NormalizedName {
   const fileName = name.trim().toLowerCase();
 
-  if (!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(fileName)) {
-    throw new Error('Name must contain lowercase letters, numbers, or hyphens and start with a letter.');
+  if (!/^[a-z][a-z0-9_-]*$/.test(fileName)) {
+    throw new Error('Name must contain lowercase letters, numbers, underscores, or hyphens and start with a letter.');
   }
 
   const className = fileName
-    .split('-')
+    .split(/[-_]/)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
 
