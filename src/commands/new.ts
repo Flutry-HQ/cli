@@ -122,27 +122,32 @@ export async function promptQuestions(): Promise<Answers> {
   });
 
   const rateLimitMax = rateLimit
-    ? Number(await input({
-        message: 'Maximum requests per window?',
-        default: String(DEFAULTS.rateLimitMax),
-        validate: validatePositiveInteger,
-      }))
+    ? Number(
+        await input({
+          message: 'Maximum requests per window?',
+          default: String(DEFAULTS.rateLimitMax),
+          validate: validatePositiveInteger,
+        }),
+      )
     : DEFAULTS.rateLimitMax;
 
   const rateLimitWindow = rateLimit
-    ? Number(await input({
-        message: 'Time window in seconds?',
-        default: String(DEFAULTS.rateLimitWindow),
-        validate: validateWindow,
-      }))
+    ? Number(
+        await input({
+          message: 'Time window in seconds?',
+          default: String(DEFAULTS.rateLimitWindow),
+          validate: validateWindow,
+        }),
+      )
     : DEFAULTS.rateLimitWindow;
 
-  const rateLimitRedis = redis && rateLimit
-    ? await confirm({
-        message: 'Use Redis for RateLimit storage?',
-        default: false,
-      })
-    : false;
+  const rateLimitRedis =
+    redis && rateLimit
+      ? await confirm({
+          message: 'Use Redis for RateLimit storage?',
+          default: false,
+        })
+      : false;
 
   const packageManager = await select<PackageManager>({
     message: `${chalk.magenta('⚙')} Package manager:`,
@@ -205,14 +210,7 @@ function buildEnv(answers: Answers, example: boolean): string {
     `RATE_LIMIT_REDIS=${answers.rateLimitRedis}`,
     `RATE_LIMIT_NAME=${answers.projectName}:global`,
     '',
-    ...(answers.redis ? [
-      '# Redis',
-      'REDIS_HOST=localhost',
-      'REDIS_PORT=6379',
-      'REDIS_PASSWORD=',
-      'REDIS_PREFIX=',
-      '',
-    ] : []),
+    ...(answers.redis ? ['# Redis', 'REDIS_HOST=localhost', 'REDIS_PORT=6379', 'REDIS_PASSWORD=', 'REDIS_PREFIX=', ''] : []),
     '# Database',
     `DB=${answers.database ? 'true' : 'false'}`,
     `DB_HOST=${value(answers.dbHost)}`,
@@ -285,13 +283,11 @@ function configureRedis(content: string): string {
   return content
     .replace(importPattern, "$1\nimport { redis } from '@flutry/redis';")
     .replace(startupPattern, (_match, indent: string) => `${indent}await redis.connect();\n\n${indent}await server.listen(`)
-    .replace(shutdownPattern, (_match, indent: string) => [
-      `${indent}try {`,
-      `${indent}  await database?.close();`,
-      `${indent}} finally {`,
-      `${indent}  await redis.disconnect();`,
-      `${indent}}`,
-    ].join('\n'));
+    .replace(shutdownPattern, (_match, indent: string) =>
+      [`${indent}try {`, `${indent}  await database?.close();`, `${indent}} finally {`, `${indent}  await redis.disconnect();`, `${indent}}`].join(
+        '\n',
+      ),
+    );
 }
 
 /**
@@ -424,11 +420,15 @@ async function createProject(answers: Answers): Promise<string> {
      * Copy into the directory reserved by this process.
      * The source directory is exclusively owned by this run.
      */
-    await fs.cp(templateDir, targetDir, {
-      recursive: true,
-      force: false,
-      errorOnExist: true,
-    });
+    const entries = await fs.readdir(templateDir);
+
+    for (const entry of entries) {
+      await fs.cp(path.join(templateDir, entry), path.join(targetDir, entry), {
+        recursive: true,
+        force: false,
+        errorOnExist: true,
+      });
+    }
 
     published = true;
 
@@ -529,9 +529,7 @@ function validatePort(value: string): true | string {
 }
 
 function validatePositiveInteger(value: string): true | string {
-  return /^\d+$/.test(value) && Number.isSafeInteger(Number(value)) && Number(value) > 0
-    ? true
-    : 'Enter a positive safe integer.';
+  return /^\d+$/.test(value) && Number.isSafeInteger(Number(value)) && Number(value) > 0 ? true : 'Enter a positive safe integer.';
 }
 
 function validateWindow(value: string): true | string {
