@@ -342,7 +342,7 @@ async function configureProject(directory: string, answers: Answers): Promise<vo
 
   if (answers.redis) {
     packageJson.dependencies ??= {};
-    packageJson.dependencies['@flutry/redis'] = 'latest';
+    packageJson.dependencies['@flutry/redis'] = `^${await getLatestVersion('@flutry/redis')}`;
   }
 
   await fs.writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
@@ -594,3 +594,15 @@ export default async function newCommand(): Promise<void> {
     process.exitCode = 1;
   }
 }
+
+const getLatestVersion = async (packageName: string): Promise<string> => {
+  const response = await fetch(`https://registry.npmjs.org/${encodeURIComponent(packageName)}/latest`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch latest version of ${packageName}`);
+  }
+
+  const data = (await response.json()) as { version: string };
+
+  return data.version;
+};
